@@ -1,0 +1,177 @@
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    Accounts
+                </div>
+                <div class="card-body">
+                    <form [formGroup]="accountFromGroup" (ngSubmit)="handleSearchAccount()">
+                        <div class="input-group">
+                            <label for="accountId" class="input-group-text">Account ID:</label>
+                            <input type="text" id="accountId" formControlName="accountId" class="form-control">
+                            <button class="btn btn-dark">
+                                <i class="bi bi-search"></i>
+                            </button>
+                        </div>
+                    </form>
+                    <!-- <ng-template #failureOrLoading>
+                        <ng-container *ngIf="errorMessage; else loading">
+                            <div class="alert alert-danger my-2">
+                                {{errorMessage}}
+                            </div>
+                        </ng-container>
+                        <ng-template #loading>
+                            <div class="d-flex justify-content-center">
+                                <div class="spinner-border" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </ng-template> -->
+                    <ng-container *ngIf="accountObservable | async as accountDetails">
+                        <div class="container my-2">
+                            <div class="my-1">
+                                <label class="mx-2">Balance: </label>
+                                <label><strong> {{ accountDetails.balance | number: '1.2-2' }} MAD</strong></label>
+                            </div>
+                            <caption>Operations:</caption>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th> ID</th>
+                                        <th>Date</th>
+                                        <th>Type</th>
+                                        <th>Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let operation of accountDetails.accountOperationDTOS">
+                                        <td>{{ operation.id }}</td>
+                                        <td>{{ operation.operationDate | date:'dd-MM-YYYY HH:mm:ss' }}</td>
+                                        <td>{{ operation.type }}</td>
+                                        <td class="text-end">{{ operation.amount | number:'1.2-2'}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <!-- Pagination -->
+                            <nav aria-label="...">
+                                <ul class="pagination">
+                                    <li class="page-item disabled">
+                                        <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                                    </li>
+                                    <div *ngFor="let item of [].constructor(accountDetails.totalPages); let page=index">
+                                        <li [ngClass]="page==currentPage ? 'active' : ''" class="page-item"
+                                            (click)="goToPage(page)" style="cursor: pointer;">
+
+                                            <a class="page-link">{{page}}</a>
+                                        </li>
+                                    </div>
+                                    <!-- <li class="page-item active" aria-current="page">
+                                        <a class="page-link" href="#">2</a>
+                                    </li> -->
+                                    <li class="page-item">
+                                        <a class="page-link" (click)="next()">Next</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card" *ngIf="accountObservable">
+                <div class="card-header">
+                    Operations
+                </div>
+
+                <div class="card-body">
+                    <form action="" [formGroup]="operationFormGroup" (ngSubmit)="handleAccountOperation()"
+                        method="post">
+                        <div class="form-check form-check-inline ">
+                            <input type="radio" class="form-check-input" formControlName="operationType" value="DEBIT">
+                            <label class="form-check-label">Debit:</label>
+                        </div>
+                        <div class="form-check form-check-inline ">
+                            <input type="radio" class="form-check-input" formControlName="operationType" value="CREDIT">
+                            <label class="form-check-label">Credit:</label>
+                        </div>
+                        <div class="form-check form-check-inline mb-2">
+                            <input type="radio" class="form-check-input" formControlName="operationType"
+                                value="TRANSFER">
+                            <label class="form-check-label">Transfer:</label>
+                        </div>
+
+                        <div class="mb-3" *ngIf="operationFormGroup.value.operationType=='TRANSFER'">
+                            <label class="form-label">Account destination:</label>
+                            <input type="text" formControlName="accountDestination" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Amount:</label>
+                            <input type="text" formControlName="amount" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Description:</label>
+                            <textarea cols="30" rows="2" formControlName="description" class="form-control"></textarea>
+                        </div>
+
+                        <div class="d-grid mt-2">
+                            <button class="btn btn-block btn-success" [disabled]="!operationFormGroup.valid">
+                                <i class="bi bi-save"></i>
+                                Save
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+
+
+<!-- <ng-container *ngIf="accounts | async as listAccounts ; else failureOrLoading">
+    <div class="card">
+        <div class="card-header">
+            Accounts
+        </div>
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Type</th>
+                        <th>Created at</th>
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let account of listAccounts">
+                        <td>{{ account.id }}</td>
+                        <td>{{ account.type }}</td>
+                        <td>{{ account.createdAt }}</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</ng-container>
+<ng-template #failureOrLoading>
+    <ng-container *ngIf="errorMessage ;else loading">
+        <div class="alert alert-danger">
+            {{errorMessage}}
+        </div>
+    </ng-container>
+
+    <ng-template #loading>
+        <div class="d-flex justify-content-center">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    </ng-template>
+</ng-template> -->

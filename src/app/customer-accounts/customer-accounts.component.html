@@ -1,0 +1,45 @@
+<ng-container *ngIf="accounts | async as accountsList; else failure">
+
+    <div class="container">
+        <div class="alert alert-warning my-4" *ngIf="accountsList.length==0">
+            This customer doesn't have any account!
+            <a routerLink="/customers" class="link-secondary">back to customers.</a>
+        </div>
+        <div class="card my-4">
+            <div class="card-header">
+                Accounts List:
+            </div>
+
+            <div class="card-body">
+                <table class="table ">
+                    <thead>
+                        <tr>
+                            <th>Customer ID</th>
+                            <th>Account ID</th>
+                            <th>Account type</th>
+                            <th>Created at</th>
+                            <th>Balance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let account of accountsList">
+                            <td>{{ customerId }}</td>
+                            <td>{{ account.id }}</td>
+                            <td class="badge rounded-pill m-2"
+                                [ngClass]="account.type=='SavingAccount' ? 'bg-primary' : 'bg-success'">
+                                {{account.type }}
+                            </td>
+                            <td>{{ account.createdAt | date:"dd-MM-YYYY HH:mm:ss" }}</td>
+                            <td>{{ account.balance | number:"1.2-2" }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</ng-container>
+<ng-template #failure>
+    <div class="alert alert-danger" *ngIf="errorMessage">
+        {{errorMessage}}
+    </div>
+</ng-template>

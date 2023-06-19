@@ -1,0 +1,85 @@
+<div class="container mt-4">
+
+    <ng-container *ngIf="customers | async as listCustomers ; else failureOrLoading">
+
+        <div class="card">
+            <div class="card-header">
+                Customers
+            </div>
+            <div class="card-body">
+                <div class="d-flex justify-content-between my-2">
+                    <div>
+                        <a routerLink="/new-customer" class="btn btn-dark">
+                            <i class="bi bi-plus-lg"></i>
+                            New customer
+                        </a>
+                    </div>
+                    <div>
+                        <form [formGroup]="searchFormGroup" (ngSubmit)="handleSearchCustomers()">
+                            <div class="input-group">
+                                <label for="" class="input-group-text">Keyword</label>
+                                <input type="text" class="form-control" formControlName="keyword" placeholder="Search">
+                                <button class="btn btn-dark" type="submit">
+                                    <i class="bi bi-search"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+
+                </div>
+                <div class="alert alert-warning" *ngIf="listCustomers.length==0">
+                    No result found!
+                </div>
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <tr *ngFor="let customer of listCustomers">
+                            <td>{{customer.id}}</td>
+                            <td>{{customer.name}}</td>
+                            <td>{{customer.email}}</td>
+                            <td class="text-center">
+                                <button (click)="handleEditCustomer(customer)" class="btn btn-primary btn-sm">
+                                    <i class="bi bi-pencil-square"></i>
+                                </button>
+                                |
+                                <button (click)="handleDeleteCustomer(customer)" class="btn btn-danger btn-sm">
+                                    <i class="bi bi-trash3"></i>
+                                </button>
+                                |
+                                <button (click)="handleCustomerAccounts(customer)" class="btn btn-secondary btn-sm">
+                                    <i class="bi bi-eye"></i>
+                                    View accounts
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </ng-container>
+    <ng-template #failureOrLoading>
+        <ng-container *ngIf="errorMessage; else loading">
+            <div class="alert alert-danger">
+                {{errorMessage}}
+            </div>
+        </ng-container>
+
+        <ng-template #loading>
+            <div class="d-flex justify-content-center">
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        </ng-template>
+
+    </ng-template>
+
+</div>

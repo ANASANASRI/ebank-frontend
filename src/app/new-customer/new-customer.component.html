@@ -1,0 +1,39 @@
+<div class="container mt-4 col-md-6">
+    <div class="card">
+        <div class="card-header">
+            Add customer:
+        </div>
+        <div class="card-body">
+            <div class="alert alert-danger" *ngIf="errorMessage">
+                {{errorMessage}}
+            </div>
+            <form [formGroup]="newCustomerFormGroup" (ngSubmit)="handleNewCustomer()">
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name:</label>
+                    <input type="text" id="name" formControlName="name" class="form-control" autocomplete="">
+                    <span class="text-danger" *ngIf="newCustomerFormGroup.controls['name'].invalid
+                        && (newCustomerFormGroup.controls['name'].dirty
+                        || newCustomerFormGroup.controls['name'].touched)">
+                        Name is required.
+                    </span>
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email:</label>
+                    <input type="email" id="email" formControlName="email" class="form-control">
+                    <span class="text-danger" *ngIf="newCustomerFormGroup.controls['email'].invalid
+                        && (newCustomerFormGroup.controls['email'].dirty
+                        || newCustomerFormGroup.controls['email'].touched)">
+                        Email is invalid.
+                    </span>
+                </div>
+                <button class="btn btn-primary" [disabled]="!newCustomerFormGroup.valid">
+                    <i class="bi bi-save"></i>
+                    Save
+                </button>
+            </form>
+
+
+        </div>
+    </div>
+
+</div>
